@@ -42,13 +42,16 @@ void UBullCowCartridge::SetupGame()
     PrintLine(TEXT("Welcome to the Bull Cows game."));
 
     //Setting up game
-    HiddenWord = TEXT("cake");
+    HiddenWord = TEXT("cakes");
     Lives = HiddenWord.Len();
     bGameOver = false;
 
     PrintLine(TEXT("Guess the %i letter word!"), HiddenWord.Len());
     PrintLine(TEXT("You have %i number of lives"), Lives);
     PrintLine(TEXT("Type in your guess. \nPress Enter to continue..."));
+
+    const TCHAR HW[] = TEXT("cakes");
+    // const TCHAR HW[] = {TEXT('c'), TEXT('a'), TEXT('k'),};  Possible to create a TCHAR like this as well, not recommended of course. Why would it be recommended?
 
     //prompt player to guess
 }
@@ -68,17 +71,18 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
         return;
     }
 
-    // Check if isogram
-    if (!IsIsogram)
-    {
-        PrintLine(TEXT("No repeating letters, guess again"));
-    }
-
     // Check the right number of characters
     if (Guess.Len() != HiddenWord.Len())
     {
         PrintLine(TEXT("Sorry, try again. \nYou have %i lives remaining"), Lives);
         PrintLine(TEXT("The hidden word is %i letters long"), HiddenWord.Len());
+        return;
+    }
+
+    // Check if isogram
+    if (!IsIsogram(Guess))
+    {
+        PrintLine(TEXT("No repeating letters, guess again"));
         return;
     }
 
@@ -98,4 +102,10 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
 
     // Show the player the bulls and the cows
     PrintLine(TEXT("Guess again, you have %i lives left"), Lives);
+}
+
+bool UBullCowCartridge::IsIsogram(FString Word) const
+{
+
+    return true;
 }
