@@ -7,6 +7,12 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     Super::BeginPlay();
 
     SetupGame();
+    PrintLine(TEXT("The number of possible words is %i."), Words.Num());
+
+    for (int32 Index = 0; Index < 5; Index++)
+    {
+        PrintLine(TEXT("%s"), *Words[Index]);
+    }
 }
 
 void UBullCowCartridge::OnInput(const FString &Input) // When the player hits enter
@@ -53,8 +59,6 @@ void UBullCowCartridge::SetupGame()
 
     const TCHAR HW[] = TEXT("cakes");
     // const TCHAR HW[] = {TEXT('c'), TEXT('a'), TEXT('k'),};  Possible to create a TCHAR like this as well, not recommended of course. Why would it be recommended?
-
-    
 }
 
 void UBullCowCartridge::EndGame()
@@ -107,10 +111,13 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
 
 bool UBullCowCartridge::IsIsogram(FString Word) const
 {
-    for(int32 Index = 0; Index< Word.Len(); Index++) {
-        for(int32 Comparison = Index + 1; Comparison < Word.Len(); Comparison++) {
-            if(Word[Index] == Word[Comparison]) {
-                return false;  
+    for (int32 Index = 0; Index < Word.Len(); Index++)
+    {
+        for (int32 Comparison = Index + 1; Comparison < Word.Len(); Comparison++)
+        {
+            if (Word[Index] == Word[Comparison])
+            {
+                return false;
             }
         }
     }
