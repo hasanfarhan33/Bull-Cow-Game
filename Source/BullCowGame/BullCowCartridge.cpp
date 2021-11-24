@@ -9,9 +9,15 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     SetupGame();
     PrintLine(TEXT("The number of possible words is %i."), Words.Num());
 
+    TArray<FString> ValidWords;
+
     for (int32 Index = 0; Index < 5; Index++)
     {
-        PrintLine(TEXT("%s"), *Words[Index]);
+        if (Words[Index].Len() < 8 && Words[Index].Len() >= 4)
+        {
+            ValidWords.Emplace(Words[Index]);
+            // PrintLine(TEXT("%s"), *Words[Index]);
+        }
     }
 }
 

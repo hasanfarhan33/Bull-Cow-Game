@@ -13,4 +13,10 @@ const TArray<FString> Words = {
     TEXT("just"),
     TEXT("kitchen"),
     TEXT("kind"),
-    TEXT("instead")};
+    TEXT("instead"), 
+    TEXT("irreplaceable"), 
+    TEXT("annoying"), 
+    TEXT("little"), 
+    TEXT("shit"), 
+    TEXT("computer")
+    };
