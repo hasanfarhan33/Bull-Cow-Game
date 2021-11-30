@@ -5,13 +5,11 @@
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
-    GetValidWords(Words);
+    Isograms = GetValidWords(Words);
     SetupGame();
-    PrintLine(TEXT("The number of possible words is %i."), Words.Num());
-    PrintLine(TEXT("The number of valid words is: %i"), GetValidWords(Words).Num());
 }
 
-void UBullCowCartridge::OnInput(const FString &Input) // When the player hits enter
+void UBullCowCartridge::OnInput(const FString &PlayerInput) // When the player hits enter
 {
 
     if (bGameOver)
@@ -21,23 +19,8 @@ void UBullCowCartridge::OnInput(const FString &Input) // When the player hits en
     }
     else // Else checking PlayerGuess
     {
-        ProcessGuess(Input);
+        ProcessGuess(PlayerInput);
     }
-
-    //Check if Isogram
-    //Prompt to guess again
-    //Check right number char
-    //Prompt to guess again
-
-    //Remove life
-
-    //Check if lives > 0
-    //IF yes guess again
-    //Show remaining lives
-    //If no show game over and hidden word
-    //prompt play again, press enter to play again
-    //check user input
-    //Play again or quit
 }
 
 void UBullCowCartridge::SetupGame()
@@ -45,15 +28,16 @@ void UBullCowCartridge::SetupGame()
     PrintLine(TEXT("Welcome to the Bull Cows game."));
 
     //Setting up game
-    HiddenWord = TEXT("cakes");
+    HiddenWord = GetValidWords(Words)[FMath:RandRange(0, Isograms.Num() - 1)];
     Lives = HiddenWord.Len();
     bGameOver = false;
 
     PrintLine(TEXT("Guess the %i letter word!"), HiddenWord.Len());
     PrintLine(TEXT("You have %i number of lives"), Lives);
     PrintLine(TEXT("Type in your guess. \nPress Enter to continue..."));
+    PrintLine(TEXT("The hidden word is: %s"), *HiddenWord) //Debug Line
 
-    const TCHAR HW[] = TEXT("cakes");
+        const TCHAR HW[] = TEXT("cakes");
     // const TCHAR HW[] = {TEXT('c'), TEXT('a'), TEXT('k'),};  Possible to create a TCHAR like this as well, not recommended of course. Why would it be recommended?
 }
 
@@ -63,7 +47,7 @@ void UBullCowCartridge::EndGame()
     PrintLine(TEXT("\nPress enter to play again"));
 }
 
-void UBullCowCartridge::ProcessGuess(FString Guess)
+void UBullCowCartridge::ProcessGuess(const FString &Guess)
 {
     if (Guess == HiddenWord)
     {
@@ -102,10 +86,14 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
     }
 
     // Show the player the bulls and the cows
+    int32 Bulls, Cows;
+    FBullCowCount Score = GetBullCows(Guess);
+
+    PrintLine(TEXT("You have %i Bulls and %i Cows"), Score.Bulls, Score.Cows);
     PrintLine(TEXT("Guess again, you have %i lives left"), Lives);
 }
 
-bool UBullCowCartridge::IsIsogram(FString Word) const
+bool UBullCowCartridge::IsIsogram(const FString &Word) const
 {
     for (int32 Index = 0; Index < Word.Len(); Index++)
     {
@@ -121,7 +109,7 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
     return true;
 }
 
-TArray<FString> UBullCowCartridge::GetValidWords(TArray<FString> WordList) const
+TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString> &WordList) const
 {
     TArray<FString> ValidWords;
 
@@ -137,4 +125,29 @@ TArray<FString> UBullCowCartridge::GetValidWords(TArray<FString> WordList) const
     }
 
     return ValidWords;
+}
+
+FBullCowCount UBullCowCartridge::GetBullCows(const FString &Guess) const
+{
+    FBullCowCount Count;
+
+    for (int32 GuessIndex = 0; GuessIndex < Guess.Len(); GuessIndex++)
+    {
+        if (Guess[GuessIndex] == HiddenWord[GuessIndex])
+        {
+            Count.Bulls++;
+            continue;
+        }
+
+        for (int32 HiddenIndex = 0; HiddenIndex < HiddenWord.Len(); HiddenIndex++)
+        {
+            if (Guess[GuessIndex] == HiddenWord[HiddenIndexIndex])
+            {
+                Count.Cows++;
+                break;
+            }
+        }
+    }
+
+    return Count;
 }
